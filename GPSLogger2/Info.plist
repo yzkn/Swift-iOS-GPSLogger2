@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>ユーザーの居場所を取得するためにバックグラウンド実行中も位置情報を取得します。</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>ユーザーの居場所を取得するために位置情報を取得します。</string>
+</dict>
+</plist>
