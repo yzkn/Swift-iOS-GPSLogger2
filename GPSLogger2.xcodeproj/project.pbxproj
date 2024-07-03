@@ -12,6 +12,10 @@
 		9ADCFD282C35EAFD002585E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9ADCFD272C35EAFD002585E5 /* Assets.xcassets */; };
 		9ADCFD2B2C35EAFD002585E5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9ADCFD2A2C35EAFD002585E5 /* Preview Assets.xcassets */; };
 		9ADCFD322C35ECA2002585E5 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCFD312C35ECA2002585E5 /* Item.swift */; };
+		9ADCFD352C35F636002585E5 /* LocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCFD342C35F636002585E5 /* LocationViewModel.swift */; };
+		9ADCFD372C35F736002585E5 /* RequestLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCFD362C35F736002585E5 /* RequestLocationView.swift */; };
+		9ADCFD392C35F767002585E5 /* TrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCFD382C35F767002585E5 /* TrackingView.swift */; };
+		9ADCFD3B2C35F785002585E5 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCFD3A2C35F785002585E5 /* ErrorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +26,10 @@
 		9ADCFD2A2C35EAFD002585E5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9ADCFD312C35ECA2002585E5 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		9ADCFD332C35F315002585E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		9ADCFD342C35F636002585E5 /* LocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewModel.swift; sourceTree = "<group>"; };
+		9ADCFD362C35F736002585E5 /* RequestLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestLocationView.swift; sourceTree = "<group>"; };
+		9ADCFD382C35F767002585E5 /* TrackingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingView.swift; sourceTree = "<group>"; };
+		9ADCFD3A2C35F785002585E5 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +68,10 @@
 				9ADCFD272C35EAFD002585E5 /* Assets.xcassets */,
 				9ADCFD292C35EAFD002585E5 /* Preview Content */,
 				9ADCFD312C35ECA2002585E5 /* Item.swift */,
+				9ADCFD342C35F636002585E5 /* LocationViewModel.swift */,
+				9ADCFD362C35F736002585E5 /* RequestLocationView.swift */,
+				9ADCFD382C35F767002585E5 /* TrackingView.swift */,
+				9ADCFD3A2C35F785002585E5 /* ErrorView.swift */,
 			);
 			path = GPSLogger2;
 			sourceTree = "<group>";
@@ -143,8 +155,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				9ADCFD262C35EAFA002585E5 /* ContentView.swift in Sources */,
+				9ADCFD392C35F767002585E5 /* TrackingView.swift in Sources */,
+				9ADCFD372C35F736002585E5 /* RequestLocationView.swift in Sources */,
 				9ADCFD322C35ECA2002585E5 /* Item.swift in Sources */,
+				9ADCFD3B2C35F785002585E5 /* ErrorView.swift in Sources */,
 				9ADCFD242C35EAFA002585E5 /* GPSLogger2App.swift in Sources */,
+				9ADCFD352C35F636002585E5 /* LocationViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

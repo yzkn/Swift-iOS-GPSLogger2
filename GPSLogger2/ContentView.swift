@@ -7,8 +7,10 @@
 
 import SwiftData
 import SwiftUI
+import CoreLocation
 
 struct ContentView: View {
+    @StateObject var locationViewModel = LocationViewModel()
     @Query private var items: [Item]
     
     var body: some View {
@@ -17,6 +19,21 @@ struct ContentView: View {
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             Text("GPSLogger2")
+            
+            switch locationViewModel.authorizationStatus {
+            case .notDetermined:
+                RequestLocationView()
+                    .environmentObject(locationViewModel)
+            case .restricted:
+                ErrorView(errorText: "位置情報の使用が制限されています。")
+            case .denied:
+                ErrorView(errorText: "位置情報を使用できません。")
+            case .authorizedAlways, .authorizedWhenInUse:
+                TrackingView()
+                    .environmentObject(locationViewModel)
+            default:
+                Text("Unexpected status")
+            }
             
             List(items) { item in
                 VStack(alignment: .leading) {
