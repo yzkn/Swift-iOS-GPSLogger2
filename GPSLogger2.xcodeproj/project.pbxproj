@@ -21,6 +21,7 @@
 		9ADCFD272C35EAFD002585E5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9ADCFD2A2C35EAFD002585E5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9ADCFD312C35ECA2002585E5 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		9ADCFD332C35F315002585E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +54,7 @@
 		9ADCFD222C35EAFA002585E5 /* GPSLogger2 */ = {
 			isa = PBXGroup;
 			children = (
+				9ADCFD332C35F315002585E5 /* Info.plist */,
 				9ADCFD232C35EAFA002585E5 /* GPSLogger2App.swift */,
 				9ADCFD252C35EAFA002585E5 /* ContentView.swift */,
 				9ADCFD272C35EAFD002585E5 /* Assets.xcassets */,
@@ -278,6 +280,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"GPSLogger2/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GPSLogger2/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -306,6 +309,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"GPSLogger2/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GPSLogger2/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
