@@ -43,4 +43,34 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
 
         print("緯度: ",location.coordinate.latitude, "経度: ", location.coordinate.longitude)
     }
+    
+    
+    // CRUD
+    private func add(
+        title: String,
+        notes: String,
+        latitude: Double,
+        longitude: Double,
+        altitude: Double,
+        hAccuracy: Double,
+        vAccuracy: Double,
+        course: Double,
+        speed: Double,
+        timestamp: Date
+    ) {
+        let item = Item(
+            title: title,
+            notes: notes,
+            latitude: latitude,
+            longitude: longitude,
+            altitude: altitude,
+            hAccuracy: hAccuracy,
+            vAccuracy: vAccuracy,
+            course: course,
+            speed: speed,
+            timestamp: timestamp
+        )
+        // context.insert(item)
+    }
+
 }
