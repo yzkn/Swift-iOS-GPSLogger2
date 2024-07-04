@@ -11,6 +11,8 @@ import SwiftData
 @Model
 class Item {
     // https://developer.apple.com/documentation/corelocation/cllocation
+    var id: UUID
+    
     var title: String
     var notes: String
     var latitude: Double
@@ -21,6 +23,7 @@ class Item {
     var course: Double
     var speed: Double
     var timestamp: Date
+    var address: String
 
     init(
         title: String,
@@ -32,8 +35,11 @@ class Item {
         vAccuracy: Double,
         course: Double,
         speed: Double,
-        timestamp: Date
+        timestamp: Date,
+        address: String
     ) {
+        self.id = UUID()
+        
         self.title = title
         self.notes = notes
         self.latitude = latitude
@@ -44,5 +50,6 @@ class Item {
         self.course = course
         self.speed = speed
         self.timestamp = timestamp
+        self.address = address
     }
 }

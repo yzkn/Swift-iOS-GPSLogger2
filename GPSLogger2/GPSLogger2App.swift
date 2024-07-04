@@ -12,7 +12,7 @@ struct GPSLogger2App: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .modelContainer(for: Item.self)
+                .modelContainer(Persistance.sharedModelContainer)
         }
     }
 }

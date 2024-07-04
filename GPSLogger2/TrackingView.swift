@@ -5,17 +5,21 @@
 //  Created by Yu on 2024/07/04.
 //
 
+import SwiftData
 import SwiftUI
 import CoreLocation
 
 struct TrackingView: View {
-    @EnvironmentObject var locationViewModel: LocationViewModel
+    @StateObject var locationViewModel = LocationViewModel()
+    @Query private var items: [Item]
 
     var body: some View {
-        VStack {
-            Text("経度：" + String(coordinate?.longitude ?? 0))
-            Text("緯度：" + String(coordinate?.latitude ?? 0))
-        }
+        Text(
+            String(coordinate?.latitude ?? 0) +
+            "," +
+            String(coordinate?.longitude ?? 0)
+        )
+            .font(.footnote)
     }
 
     var coordinate: CLLocationCoordinate2D? {
@@ -23,9 +27,9 @@ struct TrackingView: View {
     }
 }
 
-struct TrackingVie_Previews: PreviewProvider {
+struct TrackingView_Previews: PreviewProvider {
     static var previews: some View {
         TrackingView()
-            .environmentObject(LocationViewModel())
+            .modelContainer(for: Item.self)
     }
 }

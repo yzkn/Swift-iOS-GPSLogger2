@@ -20,6 +20,7 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = 1
         locationManager.allowsBackgroundLocationUpdates = true // バックグラウンド実行
         locationManager.pausesLocationUpdatesAutomatically = false
         locationManager.startUpdatingLocation()
@@ -41,14 +42,31 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             return
         }
 
-        print("緯度: ",location.coordinate.latitude, "経度: ", location.coordinate.longitude)
+        // print("緯度: ",location.coordinate.latitude, "経度: ", location.coordinate.longitude)
+        
+        Task{
+            await addItem(
+                latitude: location.coordinate.latitude,
+                longitude: location.coordinate.longitude,
+                altitude: location.altitude,
+                hAccuracy: location.horizontalAccuracy,
+                vAccuracy: location.verticalAccuracy,
+                course: location.course,
+                speed: location.speed,
+                timestamp: location.timestamp
+            )
+        }
     }
     
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("\(error)")
+    }
     
-    // CRUD
-    private func add(
-        title: String,
-        notes: String,
+    func forceUpdate() {
+        locationManager.requestLocation()
+    }
+    
+    private func addItem(
         latitude: Double,
         longitude: Double,
         altitude: Double,
@@ -57,10 +75,10 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         course: Double,
         speed: Double,
         timestamp: Date
-    ) {
-        let item = Item(
-            title: title,
-            notes: notes,
+    ) async {
+        let added = await ItemService.shared.createItem(
+            title: "",
+            notes: "",
             latitude: latitude,
             longitude: longitude,
             altitude: altitude,
@@ -68,9 +86,8 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             vAccuracy: vAccuracy,
             course: course,
             speed: speed,
-            timestamp: timestamp
+            timestamp: timestamp,
+            address: ""
         )
-        // context.insert(item)
     }
-
 }
