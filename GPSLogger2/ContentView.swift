@@ -80,15 +80,35 @@ struct ContentView: View {
                     
                         let fileName = ds + ".csv"
                         let filePath = docPath + "/" + fileName
-                        let data = csv.data(using: .utf8)
                         
                         if !fileManager.fileExists(atPath: filePath) {
-                            fileManager.createFile(atPath:filePath, contents: data, attributes: [:])
-                            
-                            if fileManager.fileExists(atPath: filePath) {
-                                print("File created.")
-                                isShowAlertAllItemExported.toggle()
+                            // fileManager.createFile(atPath:filePath, contents: csv.data(using: .utf8), attributes: [:])
+                            if let strm = OutputStream(toFileAtPath: filePath, append: false){
+                                strm.open()
+                                let BOM = "\u{feff}"
+                                strm.write(BOM, maxLength: 3)
+                                let data = csv.data(using: .utf8)
+                                _ = data?.withUnsafeBytes {
+                                    strm.write($0.baseAddress!, maxLength: Int(data?.count ?? 0))
+                                }
+                                strm.close()
                             }
+                            
+                            //
+                            
+                            let viewController = UIActivityViewController(activityItems: [csv], applicationActivities: nil)
+                            let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                            let window = windowScene?.windows.first
+                            window?.rootViewController?.present(viewController, animated: true)
+                            if UIDevice.current.userInterfaceIdiom == .pad {
+                                viewController.popoverPresentationController?.sourceView = window
+                                viewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.width / 2.1 , y: UIScreen.main.bounds.height / 1.3, width: 200, height: 200)
+                            }
+                            
+                            //
+                            
+                            print("File created.")
+                            // isShowAlertAllItemExported.toggle()
                         }
                     }
                 }
