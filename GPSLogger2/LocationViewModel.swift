@@ -10,6 +10,8 @@ import CoreLocation
 class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var authorizationStatus: CLAuthorizationStatus
     @Published var lastSeenLocation: CLLocation?
+    
+    @Published var isLocatingRunning: Bool = true
 
     private let locationManager: CLLocationManager
     
@@ -36,8 +38,21 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        lastSeenLocation = locations.first
         
+         if lastSeenLocation != nil && locations.last != nil {
+             if lastSeenLocation!.distance(from: locations.last!) < 1 {
+                 return
+             }
+         }
+        
+         // print("running: ", isLocatingRunning)
+         if isLocatingRunning {
+             //
+         } else {
+             return
+         }
+        
+        lastSeenLocation = locations.last
         guard let location = lastSeenLocation else {
             return
         }
@@ -64,7 +79,9 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         // print(String(lat ?? 0), String(lon ?? 0), String(rad ?? 0))
         
         Task{
-            await addItem(
+            await ItemService.shared.createItem(
+                title: "",
+                notes: "",
                 latitude: location.coordinate.latitude,
                 longitude: location.coordinate.longitude,
                 altitude: location.altitude,
@@ -72,13 +89,24 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
                 vAccuracy: location.verticalAccuracy,
                 course: location.course,
                 speed: location.speed,
-                timestamp: location.timestamp
+                timestamp: location.timestamp,
+                address: ""
             )
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("\(error)")
+    }
+    
+    func startUpdate() {
+        isLocatingRunning = true
+        locationManager.startUpdatingLocation()
+    }
+    
+    func stopUpdate() {
+        isLocatingRunning = false
+        locationManager.stopUpdatingLocation()
     }
     
     func forceUpdate() {
@@ -95,30 +123,5 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func setPreferenceValue(key: String, val:Any) {
         UserDefaults.standard.set(val, forKey: key)
-    }
-    
-    private func addItem(
-        latitude: Double,
-        longitude: Double,
-        altitude: Double,
-        hAccuracy: Double,
-        vAccuracy: Double,
-        course: Double,
-        speed: Double,
-        timestamp: Date
-    ) async {
-        let _ = await ItemService.shared.createItem(
-            title: "",
-            notes: "",
-            latitude: latitude,
-            longitude: longitude,
-            altitude: altitude,
-            hAccuracy: hAccuracy,
-            vAccuracy: vAccuracy,
-            course: course,
-            speed: speed,
-            timestamp: timestamp,
-            address: ""
-        )
     }
 }

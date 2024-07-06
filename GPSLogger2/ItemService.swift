@@ -109,27 +109,6 @@ final class ItemService {
         return item
     }
     
-    func createItemLastSeen() async {
-        
-        guard let location = await getLastItem() else {
-            return
-        }
-        
-        let _ = await createItem(
-            title: "",
-            notes: "Manual",
-            latitude: location.latitude,
-            longitude: location.longitude,
-            altitude: location.altitude,
-            hAccuracy: location.hAccuracy,
-            vAccuracy: location.vAccuracy,
-            course: location.course,
-            speed: location.speed,
-            timestamp: location.timestamp,
-            address: ""
-        )
-    }
-    
     func searchItems(keyword: String) async -> [Item] {
         let predicate = #Predicate<Item> { item in
             item.title.contains(keyword)
@@ -231,7 +210,7 @@ final class ItemService {
             csv.append(",")
             csv.append("\n")
         }
-        
+        print("csv", csv)
         return csv
     }
 }

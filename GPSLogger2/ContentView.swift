@@ -18,8 +18,14 @@ struct ContentView: View {
     @State private var triggerExport: Bool?
     @State private var triggerRemove: Bool?
     
+    @State private var globeBlue = true
+    
     @StateObject var locationViewModel = LocationViewModel()
     @Query(sort: \Item.timestamp, order: .reverse) private var items: [Item]
+    
+    var coordinate: CLLocationCoordinate2D? {
+        locationViewModel.lastSeenLocation?.coordinate
+    }
     
     var body: some View {
         NavigationView {
@@ -42,13 +48,30 @@ struct ContentView: View {
             
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    switch locationViewModel.authorizationStatus {
-                    case .authorizedAlways, .authorizedWhenInUse:
-                        Image(systemName: "globe")
-                            .foregroundStyle(.tint)
-                    default:
-                        Image(systemName: "globe")
+                    Button(action: {
+                        if globeBlue {
+                            globeBlue = false
+                            locationViewModel.stopUpdate()
+                        } else {
+                            globeBlue = true
+                            locationViewModel.startUpdate()
+                        }
+                    }) {
+                        switch locationViewModel.authorizationStatus {
+                        case .authorizedAlways, .authorizedWhenInUse:
+                            if globeBlue {
+                                Image(systemName: "globe.desk")
+                                    .foregroundStyle(.blue)
+                            } else {
+                                Image(systemName: "globe.desk.fill")
+                                    .foregroundStyle(.gray)
+                            }
+                        default:
+                            Image(systemName: "globe.desk.fill")
+                                .foregroundStyle(.gray)
+                        }
                     }
+                    .id(globeBlue)
                 }
                 
                 ToolbarItem(placement: .cancellationAction) {
@@ -108,7 +131,7 @@ struct ContentView: View {
                             //
                             
                             print("File created.")
-                            // isShowAlertAllItemExported.toggle()
+                            isShowAlertAllItemExported.toggle()
                         }
                     }
                 }
@@ -134,15 +157,22 @@ struct ContentView: View {
                     
                     switch locationViewModel.authorizationStatus {
                     case .notDetermined:
-                        RequestLocationView()
-                            .environmentObject(locationViewModel)
+                        Button(action: {
+                            locationViewModel.requestPermission()
+                        }) {
+                            Text("位置情報の使用を許可する")
+                        }
                     case .restricted:
                         ErrorView(errorText: "位置情報の使用が制限されています。")
                     case .denied:
                         ErrorView(errorText: "位置情報を使用できません。")
                     case .authorizedAlways, .authorizedWhenInUse:
-                        TrackingView()
-                            .environmentObject(locationViewModel)
+                        Text(
+                            String(coordinate?.latitude ?? 0) +
+                            "," +
+                            String(coordinate?.longitude ?? 0)
+                        )
+                            .font(.footnote)
                     default:
                         Text("Unexpected status")
                     }
