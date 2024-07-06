@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9A1D78892C3664ED00A7E27A /* ItemService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1D78882C3664ED00A7E27A /* ItemService.swift */; };
+		9A4F61942C379B2000DDA370 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9A4F61932C379B1F00DDA370 /* Settings.bundle */; };
 		9ADCFD242C35EAFA002585E5 /* GPSLogger2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCFD232C35EAFA002585E5 /* GPSLogger2App.swift */; };
 		9ADCFD262C35EAFA002585E5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCFD252C35EAFA002585E5 /* ContentView.swift */; };
 		9ADCFD282C35EAFD002585E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9ADCFD272C35EAFD002585E5 /* Assets.xcassets */; };
@@ -21,6 +22,7 @@
 
 /* Begin PBXFileReference section */
 		9A1D78882C3664ED00A7E27A /* ItemService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemService.swift; sourceTree = "<group>"; };
+		9A4F61932C379B1F00DDA370 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		9ADCFD202C35EAFA002585E5 /* GPSLogger2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPSLogger2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ADCFD232C35EAFA002585E5 /* GPSLogger2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPSLogger2App.swift; sourceTree = "<group>"; };
 		9ADCFD252C35EAFA002585E5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				9ADCFD382C35F767002585E5 /* TrackingView.swift */,
 				9ADCFD3A2C35F785002585E5 /* ErrorView.swift */,
 				9A1D78882C3664ED00A7E27A /* ItemService.swift */,
+				9A4F61932C379B1F00DDA370 /* Settings.bundle */,
 			);
 			path = GPSLogger2;
 			sourceTree = "<group>";
@@ -146,6 +149,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9ADCFD2B2C35EAFD002585E5 /* Preview Assets.xcassets in Resources */,
+				9A4F61942C379B2000DDA370 /* Settings.bundle in Resources */,
 				9ADCFD282C35EAFD002585E5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

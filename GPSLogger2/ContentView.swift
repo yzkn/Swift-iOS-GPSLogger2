@@ -10,8 +10,14 @@ import SwiftUI
 import CoreLocation
 
 struct ContentView: View {
+    @State private var isShowConfirmDelete = false
+    @State private var isShowAlertAllItemDeleted = false
+    @State private var isShowAlertAllItemExported = false
+    
     @State private var triggerAdd: Bool?
+    @State private var triggerExport: Bool?
     @State private var triggerRemove: Bool?
+    
     @StateObject var locationViewModel = LocationViewModel()
     @Query(sort: \Item.timestamp, order: .reverse) private var items: [Item]
     
@@ -50,8 +56,40 @@ struct ContentView: View {
                 }
                 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(action: {}) {
+                    Button(action: {
+                        if triggerExport == nil {
+                            triggerExport = true
+                        } else {
+                            triggerExport?.toggle()
+                        }
+                    }) {
                         Image(systemName: "square.and.arrow.up")
+                    }
+                    .task(id: triggerExport) {
+                        guard triggerExport != nil else { return }
+                        
+                        let csv = await ItemService.shared.getCsv()
+                        print(csv)
+                        
+                        let fileManager = FileManager.default
+                        let docPath =  NSHomeDirectory() + "/Documents"
+                        
+                        let df = DateFormatter()
+                        df.dateFormat = "yyyyMMddHHmmss"
+                        let ds = df.string(from: Date())
+                    
+                        let fileName = ds + ".csv"
+                        let filePath = docPath + "/" + fileName
+                        let data = csv.data(using: .utf8)
+                        
+                        if !fileManager.fileExists(atPath: filePath) {
+                            fileManager.createFile(atPath:filePath, contents: data, attributes: [:])
+                            
+                            if fileManager.fileExists(atPath: filePath) {
+                                print("File created.")
+                                isShowAlertAllItemExported.toggle()
+                            }
+                        }
                     }
                 }
                 
@@ -69,49 +107,58 @@ struct ContentView: View {
                     }
                     .task(id: triggerAdd) {
                         guard triggerAdd != nil else { return }
-                        do {
                             locationViewModel.forceUpdate()
-                            // try await ItemService.shared.createItemLastSeen()
-                        } catch {
-                        }
                     }
                     
-                    VStack() {
-                        switch locationViewModel.authorizationStatus {
-                        case .notDetermined:
-                            RequestLocationView()
-                                .environmentObject(locationViewModel)
-                        case .restricted:
-                            ErrorView(errorText: "位置情報の使用が制限されています。")
-                        case .denied:
-                            ErrorView(errorText: "位置情報を使用できません。")
-                        case .authorizedAlways, .authorizedWhenInUse:
-                            TrackingView()
-                                .environmentObject(locationViewModel)
-                        default:
-                            Text("Unexpected status")
-                        }
+                    Spacer()
+                    
+                    switch locationViewModel.authorizationStatus {
+                    case .notDetermined:
+                        RequestLocationView()
+                            .environmentObject(locationViewModel)
+                    case .restricted:
+                        ErrorView(errorText: "位置情報の使用が制限されています。")
+                    case .denied:
+                        ErrorView(errorText: "位置情報を使用できません。")
+                    case .authorizedAlways, .authorizedWhenInUse:
+                        TrackingView()
+                            .environmentObject(locationViewModel)
+                    default:
+                        Text("Unexpected status")
                     }
-                    VStack() {
-                        Button(action: {
-                            if triggerRemove == nil {
-                                triggerRemove = true
-                            } else {
-                                triggerRemove?.toggle()
-                            }
-                        }) {
-                            Image(systemName: "trash")
-                        }
-                    }
-                    .task(id: triggerRemove) {
-                        guard triggerRemove != nil else { return }
-                        do {
-                            try await ItemService.shared.deleteAllItems()
-                        } catch {
-                        }
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        isShowConfirmDelete.toggle()
+                    }) {
+                        Image(systemName: "trash")
                     }
                 }
             }
+        }
+        .navigationViewStyle(.stack)
+        .alert("Are you sure you want to delete all items?", isPresented: $isShowConfirmDelete) {
+            Button("Cancel") {
+            }
+            Button("OK") {
+                if triggerRemove == nil {
+                    triggerRemove = true
+                } else {
+                    triggerRemove?.toggle()
+                }
+            }
+            .task(id: triggerRemove) {
+                guard triggerRemove != nil else { return }
+                let result = await ItemService.shared.deleteAllItems()
+                if(result){
+                    isShowAlertAllItemDeleted.toggle()
+                }
+            }
+        }
+        .alert("All items were removed.", isPresented: $isShowAlertAllItemDeleted) {
+        }
+        .alert("All items were exported.", isPresented: $isShowAlertAllItemExported) {
         }
     }
 }

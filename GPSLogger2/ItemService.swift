@@ -115,7 +115,7 @@ final class ItemService {
             return
         }
         
-        let added = await createItem(
+        let _ = await createItem(
             title: "",
             notes: "Manual",
             latitude: location.latitude,
@@ -181,7 +181,7 @@ final class ItemService {
     }
     
     func updateItemAddress(id: UUID, address: String? = nil, title: String? = nil, notes: String? = nil) async -> Item? {
-        guard var item = await getItemById(id: id) else { return nil }
+        guard let item = await getItemById(id: id) else { return nil }
         if let address = address {
             item.address = address
         }
@@ -202,5 +202,36 @@ final class ItemService {
 
         let descriptor = FetchDescriptor(predicate: predicate)
         return await actor.get(descriptor) ?? []
+    }
+    
+    func getCsv() async -> String{
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss z"
+        
+        var csv = "latitude,longitude,altitude,speed,timestamp,address,title,notes"
+        csv.append("\n")
+
+        let items = await getAllItems()
+        for item in items {
+            csv.append(String(item.latitude))
+            csv.append(",")
+            csv.append(String(item.longitude))
+            csv.append(",")
+            csv.append(String(item.altitude))
+            csv.append(",")
+            csv.append(String(item.speed))
+            csv.append(",")
+            csv.append(df.string(from: item.timestamp))
+            csv.append(",")
+            csv.append(item.address)
+            csv.append(",")
+            csv.append(item.title)
+            csv.append(",")
+            csv.append(item.notes)
+            csv.append(",")
+            csv.append("\n")
+        }
+        
+        return csv
     }
 }
