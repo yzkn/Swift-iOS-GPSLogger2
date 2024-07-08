@@ -79,7 +79,7 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         // print(String(lat ?? 0), String(lon ?? 0), String(rad ?? 0))
         
         Task{
-            await ItemService.shared.createItem(
+            let createdItem = await ItemService.shared.createItem(
                 title: "",
                 notes: "",
                 latitude: location.coordinate.latitude,
@@ -92,6 +92,12 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
                 timestamp: location.timestamp,
                 address: ""
             )
+            
+            let revGeo = ReverseGeocoding()
+            let label = revGeo.townDatastore.search(lat: location.coordinate.latitude, lon: location.coordinate.longitude)
+            if(label != nil){
+                await ItemService.shared.updateItemAddress(id: createdItem.id, address: label)
+            }
         }
     }
     

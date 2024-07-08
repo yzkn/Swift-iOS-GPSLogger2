@@ -31,7 +31,7 @@ struct ContentView: View {
         NavigationView {
             List(items) { item in
                 VStack(alignment: .leading) {
-                    Text(item.title)
+                    Text(item.address)
                     HStack{
                         Text(String(item.latitude))
                         Text(",")
@@ -92,7 +92,6 @@ struct ContentView: View {
                         guard triggerExport != nil else { return }
                         
                         let csv = await ItemService.shared.getCsv()
-                        print(csv)
                         
                         let fileManager = FileManager.default
                         let docPath =  NSHomeDirectory() + "/Documents"
