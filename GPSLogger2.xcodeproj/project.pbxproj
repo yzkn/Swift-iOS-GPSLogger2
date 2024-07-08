@@ -298,6 +298,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GPSLogger2/Info.plist;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "ユーザーの居場所を取得するためにバックグラウンド実行中も位置情報を取得します。";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "ユーザーの居場所を取得するために位置情報を取得します。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -330,6 +331,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GPSLogger2/Info.plist;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "ユーザーの居場所を取得するためにバックグラウンド実行中も位置情報を取得します。";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "ユーザーの居場所を取得するために位置情報を取得します。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
