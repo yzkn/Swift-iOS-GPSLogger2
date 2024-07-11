@@ -8,6 +8,7 @@
 import SwiftData
 import SwiftUI
 import CoreLocation
+import MapKit
 
 struct ContentView: View {
     @State private var isShowConfirmDelete = false
@@ -19,31 +20,70 @@ struct ContentView: View {
     @State private var triggerRemove: Bool?
     
     @State private var globeBlue = true
+    @State private var searchTerm: String = ""
     
     @StateObject var locationViewModel = LocationViewModel()
-    @Query(sort: \Item.timestamp, order: .reverse) private var items: [Item]
     
-    var coordinate: CLLocationCoordinate2D? {
+    @Query(sort: \Item.timestamp, order: .reverse) private var items: [Item]
+    private var filteredItems: [Item] {
+        guard !searchTerm.isEmpty else { return items }
+        return items.filter { $0.address.contains(searchTerm) || String($0.latitude).contains(searchTerm) || String($0.longitude).contains(searchTerm)}
+    }
+    
+    private var coordinate: CLLocationCoordinate2D? {
         locationViewModel.lastSeenLocation?.coordinate
     }
     
     var body: some View {
         NavigationView {
-            List(items) { item in
-                VStack(alignment: .leading) {
-                    Text(item.address)
-                    HStack{
-                        Text(String(item.latitude))
-                        Text(",")
-                        Text(String(item.longitude))
+            VStack {
+                VStack {
+                    GeometryReader { g in
+
+                        VStack {
+                            ZStack {
+                                HStack{
+                                    Map(
+                                         interactionModes: .all
+                                    )
+                                    {
+                                        UserAnnotation()
+                                    }
+                                    .mapControls {
+                                        MapCompass()
+                                            .mapControlVisibility(.visible)
+                                        MapScaleView()
+                                            .mapControlVisibility(.visible)
+                                        MapUserLocationButton()
+                                            .mapControlVisibility(.visible)
+                                    }
+                                }
+                            }.frame(width: g.size.width, height: g.size.height/2, alignment: .center)
+
+                            ZStack {
+                                HStack{
+                                    List(filteredItems) { item in
+                                        VStack(alignment: .leading) {
+                                            Text(item.address)
+                                            HStack{
+                                                Text(String(item.latitude))
+                                                Text(",")
+                                                Text(String(item.longitude))
+                                            }
+                                            HStack{
+                                                Text(item.timestamp, style: .date)
+                                                    .foregroundColor(.secondary)
+                                                Text(item.timestamp, style: .time)
+                                                    .foregroundColor(.secondary)
+                                            }
+                                        }
+                                    }
+                                }
+                            }.frame(width: g.size.width, height: g.size.height/2, alignment: .center)
+                        }
                     }
-                    HStack{
-                        Text(item.timestamp, style: .date)
-                            .foregroundColor(.secondary)
-                        Text(item.timestamp, style: .time)
-                            .foregroundColor(.secondary)
-                    }
-                }
+                }.frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+
             }
             
             .toolbar {
@@ -76,6 +116,13 @@ struct ContentView: View {
                 
                 ToolbarItem(placement: .cancellationAction) {
                     Text("GPSLogger2")
+                }
+                
+                ToolbarItem(placement: .confirmationAction) {
+                    TextField("検索キーワード", text: $searchTerm)
+                        .frame(width: 200.0)
+                        .padding()
+                        .cornerRadius(5)
                 }
                 
                 ToolbarItem(placement: .confirmationAction) {

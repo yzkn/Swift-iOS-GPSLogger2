@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9A1D78892C3664ED00A7E27A /* ItemService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1D78882C3664ED00A7E27A /* ItemService.swift */; };
+		9A3480402C3FDC06001858FC /* PinItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A34803F2C3FDC06001858FC /* PinItem.swift */; };
 		9A4F61942C379B2000DDA370 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9A4F61932C379B1F00DDA370 /* Settings.bundle */; };
 		9A59BC9D2C3BF1E400439023 /* ReverseGeocoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A59BC9C2C3BF1E400439023 /* ReverseGeocoding.swift */; };
 		9A59BCA02C3BF25300439023 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 9A59BC9F2C3BF25300439023 /* SQLite */; };
@@ -23,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		9A1D78882C3664ED00A7E27A /* ItemService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemService.swift; sourceTree = "<group>"; };
+		9A34803F2C3FDC06001858FC /* PinItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinItem.swift; sourceTree = "<group>"; };
 		9A4F61932C379B1F00DDA370 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		9A59BC9C2C3BF1E400439023 /* ReverseGeocoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReverseGeocoding.swift; sourceTree = "<group>"; };
 		9A59BCA12C3BF2B900439023 /* town.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = town.db; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 				9ADCFD3A2C35F785002585E5 /* ErrorView.swift */,
 				9A1D78882C3664ED00A7E27A /* ItemService.swift */,
 				9A4F61932C379B1F00DDA370 /* Settings.bundle */,
+				9A34803F2C3FDC06001858FC /* PinItem.swift */,
 			);
 			path = GPSLogger2;
 			sourceTree = "<group>";
@@ -176,6 +179,7 @@
 				9A1D78892C3664ED00A7E27A /* ItemService.swift in Sources */,
 				9ADCFD3B2C35F785002585E5 /* ErrorView.swift in Sources */,
 				9ADCFD242C35EAFA002585E5 /* GPSLogger2App.swift in Sources */,
+				9A3480402C3FDC06001858FC /* PinItem.swift in Sources */,
 				9ADCFD352C35F636002585E5 /* LocationViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

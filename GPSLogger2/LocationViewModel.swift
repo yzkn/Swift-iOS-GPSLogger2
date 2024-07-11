@@ -6,10 +6,12 @@
 //
 
 import CoreLocation
+// import MapKit
 
 class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var authorizationStatus: CLAuthorizationStatus
     @Published var lastSeenLocation: CLLocation?
+    // @Published var lastSeenRegion: MKCoordinateRegion?
     
     @Published var isLocatingRunning: Bool = true
 
@@ -56,6 +58,10 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         guard let location = lastSeenLocation else {
             return
         }
+        
+        // let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        // let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        // lastSeenRegion = MKCoordinateRegion(center: center, span: span)
 
         // print("緯度: ",location.coordinate.latitude, "経度: ", location.coordinate.longitude)
         
