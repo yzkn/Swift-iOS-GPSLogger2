@@ -48,6 +48,14 @@ struct ContentView: View {
                                     )
                                     {
                                         UserAnnotation()
+                                        
+                                        ForEach(filteredItems, id: \.self) { item in
+                                            Marker(coordinate: CLLocationCoordinate2D(latitude: item.latitude, longitude: item.longitude)) {
+                                                Text(item.address)
+                                                Image(systemName: "mappin")
+                                            }
+                                            .tint(.blue)
+                                        }
                                     }
                                     .mapControls {
                                         MapCompass()
