@@ -159,11 +159,8 @@ final class ItemService {
         return true
     }
     
-    func updateItemAddress(id: UUID, address: String? = nil, title: String? = nil, notes: String? = nil) async -> Item? {
+    func updateItemTitle(id: UUID, title: String? = nil, notes: String? = nil) async -> Item? {
         guard let item = await getItemById(id: id) else { return nil }
-        if let address = address {
-            item.address = address
-        }
         if let title = title {
             item.title = title
         }
@@ -210,7 +207,59 @@ final class ItemService {
             csv.append(",")
             csv.append("\n")
         }
-        print("csv", csv)
+        
+        // print("csv", csv)
         return csv
+    }
+    
+    func getKml() async -> String{
+        let df = DateFormatter()
+        df.dateFormat = "yyyyMMddHHmmss"
+        
+        var routeName = ""
+        var routeSummary: [String] = []
+        var kmlCsv = ""
+        
+        let items = await getAllItems()
+        
+        routeName = df.string(from: items[0].timestamp)
+        for item in items {
+            kmlCsv.append(String(item.longitude))
+            kmlCsv.append(",")
+            kmlCsv.append(String(item.latitude))
+            kmlCsv.append(",")
+            kmlCsv.append(String(item.altitude))
+            kmlCsv.append("\n")
+            
+            if(routeSummary.last != item.address) {
+                routeSummary.append(item.address)
+            }
+        }
+        
+        let kml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + """
+<kml xmlns="http://www.opengis.net/kml/2.2">
+    <Document>
+        <name>GPSLogger2</name>
+        <description>These routes recorded by GPSLogger2</description>
+        <Style id="redLine">
+            <LineStyle>
+                <color>ff0000ff</color>
+                <width>1</width>
+            </LineStyle>
+        </Style>
+        <Placemark>
+            <name>\(routeName)</name>
+            <description>\(routeSummary.joined(separator: ","))</description>
+            <styleUrl>#redLine</styleUrl>
+            <LineString>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>\(kmlCsv)</coordinates>
+            </LineString>
+        </Placemark>
+    </Document>
+""" + "</kml>"
+    
+        // print("kml", kml)
+        return kml
     }
 }

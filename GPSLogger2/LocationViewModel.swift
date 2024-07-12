@@ -59,12 +59,6 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             return
         }
         
-        // let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-        // let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-        // lastSeenRegion = MKCoordinateRegion(center: center, span: span)
-
-        // print("緯度: ",location.coordinate.latitude, "経度: ", location.coordinate.longitude)
-        
         let lat = getPreferenceDoubleValue(key: "home_area_latitude")
         let lon = getPreferenceDoubleValue(key: "home_area_longitude")
         let rad = getPreferenceDoubleValue(key: "home_area_radius")
@@ -85,6 +79,9 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         // print(String(lat ?? 0), String(lon ?? 0), String(rad ?? 0))
         
         Task{
+            let revGeo = ReverseGeocoding()
+            let label = revGeo.townDatastore.search(lat: location.coordinate.latitude, lon: location.coordinate.longitude)
+            
             let createdItem = await ItemService.shared.createItem(
                 title: "",
                 notes: "",
@@ -96,14 +93,8 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
                 course: location.course,
                 speed: location.speed,
                 timestamp: location.timestamp,
-                address: ""
+                address: label ?? ""
             )
-            
-            let revGeo = ReverseGeocoding()
-            let label = revGeo.townDatastore.search(lat: location.coordinate.latitude, lon: location.coordinate.longitude)
-            if(label != nil){
-                await ItemService.shared.updateItemAddress(id: createdItem.id, address: label)
-            }
         }
     }
     

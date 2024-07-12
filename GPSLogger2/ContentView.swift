@@ -17,6 +17,7 @@ struct ContentView: View {
     
     @State private var triggerAdd: Bool?
     @State private var triggerExport: Bool?
+    @State private var triggerKml: Bool?
     @State private var triggerRemove: Bool?
     
     @State private var globeBlue = true
@@ -95,40 +96,13 @@ struct ContentView: View {
             }
             
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        if globeBlue {
-                            globeBlue = false
-                            locationViewModel.stopUpdate()
-                        } else {
-                            globeBlue = true
-                            locationViewModel.startUpdate()
-                        }
-                    }) {
-                        switch locationViewModel.authorizationStatus {
-                        case .authorizedAlways, .authorizedWhenInUse:
-                            if globeBlue {
-                                Image(systemName: "globe.desk")
-                                    .foregroundStyle(.blue)
-                            } else {
-                                Image(systemName: "globe.desk.fill")
-                                    .foregroundStyle(.gray)
-                            }
-                        default:
-                            Image(systemName: "globe.desk.fill")
-                                .foregroundStyle(.gray)
-                        }
-                    }
-                    .id(globeBlue)
-                }
-                
                 ToolbarItem(placement: .cancellationAction) {
                     Text("GPSLogger2")
                 }
                 
                 ToolbarItem(placement: .confirmationAction) {
-                    TextField("検索キーワード", text: $searchTerm)
-                        .frame(width: 200.0)
+                    TextField("検索", text: $searchTerm)
+                        .frame(width: 60.0)
                         .padding()
                         .cornerRadius(5)
                 }
@@ -175,22 +149,75 @@ struct ContentView: View {
                     }
                 }
                 
-                ToolbarItemGroup(placement: .bottomBar) {
-                    VStack() {
+                ToolbarItem(placement: .confirmationAction) {
                     Button(action: {
-                        if triggerAdd == nil {
-                            triggerAdd = true
+                        if triggerKml == nil {
+                            triggerKml = true
                         } else {
-                            triggerAdd?.toggle()
+                            triggerKml?.toggle()
                         }
                     }) {
-                        Image(systemName: "mappin")
+                        Image(systemName: "square.and.arrow.up.fill")
                     }
+                    .task(id: triggerKml) {
+                        guard triggerKml != nil else { return }
+                        
+                        let kml = await ItemService.shared.getKml()
+                        
+                        let fileManager = FileManager.default
+                        let docPath =  NSHomeDirectory() + "/Documents"
+                        
+                        let df = DateFormatter()
+                        df.dateFormat = "yyyyMMddHHmmss"
+                        let ds = df.string(from: Date())
+                    
+                        let fileName = ds + ".kml"
+                        let filePath = docPath + "/" + fileName
+                        
+                        if !fileManager.fileExists(atPath: filePath) {
+                            if let strm = OutputStream(toFileAtPath: filePath, append: false){
+                                strm.open()
+                                let BOM = "\u{feff}"
+                                strm.write(BOM, maxLength: 3)
+                                let data = kml.data(using: .utf8)
+                                _ = data?.withUnsafeBytes {
+                                    strm.write($0.baseAddress!, maxLength: Int(data?.count ?? 0))
+                                }
+                                strm.close()
+                            }
+                            isShowAlertAllItemExported.toggle()
+                        }
                     }
-                    .task(id: triggerAdd) {
-                        guard triggerAdd != nil else { return }
+                }
+                
+                ToolbarItemGroup(placement: .bottomBar) {
+                    Button(action: {
+                        if globeBlue {
+                            globeBlue = false
+                            locationViewModel.stopUpdate()
+                        } else {
+                            globeBlue = true
+                            locationViewModel.startUpdate()
+                            
+                            locationViewModel.lastSeenLocation = nil
                             locationViewModel.forceUpdate()
+                        }
+                    }) {
+                        switch locationViewModel.authorizationStatus {
+                        case .authorizedAlways, .authorizedWhenInUse:
+                            if globeBlue {
+                                Image(systemName: "globe.desk")
+                                    .foregroundStyle(.blue)
+                            } else {
+                                Image(systemName: "globe.desk.fill")
+                                    .foregroundStyle(.gray)
+                            }
+                        default:
+                            Image(systemName: "globe.desk.fill")
+                                .foregroundStyle(.gray)
+                        }
                     }
+                    .id(globeBlue)
                     
                     Spacer()
                     
@@ -206,12 +233,15 @@ struct ContentView: View {
                     case .denied:
                         ErrorView(errorText: "位置情報を使用できません。")
                     case .authorizedAlways, .authorizedWhenInUse:
-                        Text(
-                            String(coordinate?.latitude ?? 0) +
-                            "," +
-                            String(coordinate?.longitude ?? 0)
-                        )
-                            .font(.footnote)
+                        if(coordinate == nil){
+                            Text("---")
+                        } else {
+                            Text(
+                                String(coordinate?.latitude ?? 0) +
+                                "," +
+                                String(coordinate?.longitude ?? 0)
+                            ).font(.footnote)
+                        }
                     default:
                         Text("Unexpected status")
                     }
@@ -240,6 +270,7 @@ struct ContentView: View {
             .task(id: triggerRemove) {
                 guard triggerRemove != nil else { return }
                 let result = await ItemService.shared.deleteAllItems()
+                locationViewModel.lastSeenLocation = nil
                 if(result){
                     isShowAlertAllItemDeleted.toggle()
                 }
