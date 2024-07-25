@@ -20,7 +20,7 @@
 			<key>Key</key>
 			<string>home_area_latitude</string>
 			<key>DefaultValue</key>
-			<string>35.681236</string>
+			<string>0</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>KeyboardType</key>
@@ -38,7 +38,7 @@
 			<key>Key</key>
 			<string>home_area_longitude</string>
 			<key>DefaultValue</key>
-			<string>139.767125</string>
+			<string>0</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>KeyboardType</key>
@@ -56,7 +56,9 @@
 			<key>Key</key>
 			<string>home_area_radius</string>
 			<key>DefaultValue</key>
-			<string>4000</string>
+			<string>0</string>
+			<key>KeyboardType</key>
+			<string>NumberPad</string>
 		</dict>
 	</array>
 </dict>

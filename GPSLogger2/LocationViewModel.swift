@@ -11,9 +11,12 @@ import CoreLocation
 class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var authorizationStatus: CLAuthorizationStatus
     @Published var lastSeenLocation: CLLocation?
-    // @Published var lastSeenRegion: MKCoordinateRegion?
+    @Published var isLastSeenLocationInHomeArea: Bool = true
     
     @Published var isLocatingRunning: Bool = true
+    
+    // 東京駅
+    // let DEFAULT_LOCATION = ["home_area_latitude" : 35.681236, "home_area_longitude" : 139.767125, "home_area_radius" : 1000]
 
     private let locationManager: CLLocationManager
     
@@ -59,24 +62,35 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             return
         }
         
+        // UserDefaults.standard.register(defaults: DEFAULT_LOCATION)
+        
         let lat = getPreferenceDoubleValue(key: "home_area_latitude")
         let lon = getPreferenceDoubleValue(key: "home_area_longitude")
         let rad = getPreferenceDoubleValue(key: "home_area_radius")
         
         if(lat == 0 || lon == 0 || rad == 0){
             // 未設定なので記録
+            isLastSeenLocationInHomeArea = false
         } else {
             // 設定済
             let home = CLLocation(latitude: lat ?? 0, longitude: lon ?? 0)
             if(location.distance(from: home) < rad ?? 0){
                 // Home area内なのでスキップ
-                return
+                isLastSeenLocationInHomeArea = true
             } else {
                 // Home areaの外なので記録
+                isLastSeenLocationInHomeArea = false
             }
         }
         
-        // print(String(lat ?? 0), String(lon ?? 0), String(rad ?? 0))
+        print(
+            String(location.coordinate.latitude), String(location.coordinate.longitude),
+            isLastSeenLocationInHomeArea ? "🏠" : "📍", String(lat ?? 0), String(lon ?? 0), String(rad ?? 0)
+        )
+        
+        if(isLastSeenLocationInHomeArea){
+            return
+        }
         
         Task{
             let revGeo = ReverseGeocoding()

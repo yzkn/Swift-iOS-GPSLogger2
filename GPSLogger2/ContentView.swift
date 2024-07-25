@@ -25,6 +25,8 @@ struct ContentView: View {
     
     @StateObject var locationViewModel = LocationViewModel()
     
+    @Environment(\.openURL) var openURL
+    
     @Query(sort: \Item.timestamp, order: .reverse) private var items: [Item]
     private var filteredItems: [Item] {
         guard !searchTerm.isEmpty else { return items }
@@ -33,6 +35,17 @@ struct ContentView: View {
     
     private var coordinate: CLLocationCoordinate2D? {
         locationViewModel.lastSeenLocation?.coordinate
+    }
+    
+    private var isLastSeenLocationInHomeArea: Bool {
+        locationViewModel.isLastSeenLocationInHomeArea
+    }
+    
+    private var dateFormatter = DateFormatter()
+    
+    init(){
+        dateFormatter.dateFormat = "MM/dd HH:mm:ss"
+        dateFormatter.locale = Locale(identifier: "ja_jp")
     }
     
     var body: some View {
@@ -75,15 +88,14 @@ struct ContentView: View {
                                         VStack(alignment: .leading) {
                                             Text(item.address)
                                             HStack{
-                                                Text(String(item.latitude))
-                                                Text(",")
-                                                Text(String(item.longitude))
+                                                Text(String(format: "%.6f", item.latitude) + " , " + String(format: "%.6f", item.longitude))
+                                                    .foregroundColor(.secondary)
+                                                    .font(.footnote)
                                             }
                                             HStack{
-                                                Text(item.timestamp, style: .date)
+                                                Text(dateFormatter.string(from: item.timestamp))
                                                     .foregroundColor(.secondary)
-                                                Text(item.timestamp, style: .time)
-                                                    .foregroundColor(.secondary)
+                                                    .font(.footnote)
                                             }
                                         }
                                     }
@@ -95,12 +107,8 @@ struct ContentView: View {
 
             }
             
-            .toolbar {
+            .toolbar {                
                 ToolbarItem(placement: .cancellationAction) {
-                    Text("GPSLogger2")
-                }
-                
-                ToolbarItem(placement: .confirmationAction) {
                     TextField("検索", text: $searchTerm)
                         .frame(width: 60.0)
                         .padding()
@@ -190,6 +198,36 @@ struct ContentView: View {
                     }
                 }
                 
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(action: {
+                        if(items.count > 0){
+                            let firstItem = items.first!
+                            let addr = firstItem.address
+                            let latlon = String(firstItem.latitude) + "," + String(firstItem.longitude)
+
+                            let message = "\(addr) https://www.google.com/maps/search/?api=1&query=\(latlon)"
+                            let encoded = message
+                            openURL(URL(string: "https://twitter.com/intent/tweet?text=\(encoded)")!)
+                        } else {
+                            openURL(URL(string: "https://twitter.com/intent/tweet?text=")!)
+                        }
+                    }) {
+                        Image(systemName: "x.square")
+                    }
+                }
+                
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(action: {
+                        if let url = URL(string: UIApplication.openSettingsURLString) {
+                            if UIApplication.shared.canOpenURL(url) {
+                                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                            }
+                        }
+                    }) {
+                        Image(systemName: "gearshape")
+                    }
+                }
+                
                 ToolbarItemGroup(placement: .bottomBar) {
                     Button(action: {
                         if globeBlue {
@@ -237,9 +275,10 @@ struct ContentView: View {
                             Text("---")
                         } else {
                             Text(
-                                String(coordinate?.latitude ?? 0) +
+                                (isLastSeenLocationInHomeArea ? "🏠" : "📍") +
+                                String(format: "%.8f", coordinate?.latitude ?? 0) +
                                 "," +
-                                String(coordinate?.longitude ?? 0)
+                                String(format: "%.8f", coordinate?.longitude ?? 0)
                             ).font(.footnote)
                         }
                     default:
