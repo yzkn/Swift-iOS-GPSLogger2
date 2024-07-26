@@ -13,6 +13,8 @@
 		9A59BC9D2C3BF1E400439023 /* ReverseGeocoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A59BC9C2C3BF1E400439023 /* ReverseGeocoding.swift */; };
 		9A59BCA02C3BF25300439023 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 9A59BC9F2C3BF25300439023 /* SQLite */; };
 		9A59BCA22C3BF2B900439023 /* town.db in Resources */ = {isa = PBXBuildFile; fileRef = 9A59BCA12C3BF2B900439023 /* town.db */; };
+		9A8498902C5380D40044B77E /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A84988F2C5380D40044B77E /* NotificationManager.swift */; };
+		9A8498922C5382EA0044B77E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8498912C5382EA0044B77E /* AppDelegate.swift */; };
 		9ADCFD242C35EAFA002585E5 /* GPSLogger2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCFD232C35EAFA002585E5 /* GPSLogger2App.swift */; };
 		9ADCFD262C35EAFA002585E5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCFD252C35EAFA002585E5 /* ContentView.swift */; };
 		9ADCFD282C35EAFD002585E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9ADCFD272C35EAFD002585E5 /* Assets.xcassets */; };
@@ -28,6 +30,8 @@
 		9A4F61932C379B1F00DDA370 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		9A59BC9C2C3BF1E400439023 /* ReverseGeocoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReverseGeocoding.swift; sourceTree = "<group>"; };
 		9A59BCA12C3BF2B900439023 /* town.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = town.db; sourceTree = "<group>"; };
+		9A84988F2C5380D40044B77E /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		9A8498912C5382EA0044B77E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9ADCFD202C35EAFA002585E5 /* GPSLogger2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPSLogger2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ADCFD232C35EAFA002585E5 /* GPSLogger2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPSLogger2App.swift; sourceTree = "<group>"; };
 		9ADCFD252C35EAFA002585E5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -83,6 +87,8 @@
 				9A1D78882C3664ED00A7E27A /* ItemService.swift */,
 				9A4F61932C379B1F00DDA370 /* Settings.bundle */,
 				9A34803F2C3FDC06001858FC /* PinItem.swift */,
+				9A84988F2C5380D40044B77E /* NotificationManager.swift */,
+				9A8498912C5382EA0044B77E /* AppDelegate.swift */,
 			);
 			path = GPSLogger2;
 			sourceTree = "<group>";
@@ -176,10 +182,12 @@
 				9ADCFD262C35EAFA002585E5 /* ContentView.swift in Sources */,
 				9ADCFD322C35ECA2002585E5 /* Item.swift in Sources */,
 				9A59BC9D2C3BF1E400439023 /* ReverseGeocoding.swift in Sources */,
+				9A8498902C5380D40044B77E /* NotificationManager.swift in Sources */,
 				9A1D78892C3664ED00A7E27A /* ItemService.swift in Sources */,
 				9ADCFD3B2C35F785002585E5 /* ErrorView.swift in Sources */,
 				9ADCFD242C35EAFA002585E5 /* GPSLogger2App.swift in Sources */,
 				9A3480402C3FDC06001858FC /* PinItem.swift in Sources */,
+				9A8498922C5382EA0044B77E /* AppDelegate.swift in Sources */,
 				9ADCFD352C35F636002585E5 /* LocationViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

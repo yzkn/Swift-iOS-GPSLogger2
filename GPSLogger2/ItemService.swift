@@ -38,7 +38,7 @@ actor PersistanceActor: ModelActor {
         do {
             try modelContext.save()
         }catch {
-            print("error save")
+            // print("error save")
         }
     }
 
@@ -47,7 +47,7 @@ actor PersistanceActor: ModelActor {
             modelContext.insert(value)
             try modelContext.save()
         }catch {
-            print("error insert")
+            // print("error insert")
         }
     }
     
@@ -56,7 +56,7 @@ actor PersistanceActor: ModelActor {
             modelContext.delete(value)
             try modelContext.save()
         }catch {
-            print("error delete")
+            // print("error delete")
         }
     }
     
@@ -65,7 +65,7 @@ actor PersistanceActor: ModelActor {
         do {
             fetched = try modelContext.fetch(descriptor)
         }catch {
-            print("error get")
+            // print("error get")
         }
         return fetched
     }

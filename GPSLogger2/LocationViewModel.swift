@@ -12,6 +12,8 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var authorizationStatus: CLAuthorizationStatus
     @Published var lastSeenLocation: CLLocation?
     @Published var isLastSeenLocationInHomeArea: Bool = true
+    @Published var homeAreaLocation: CLLocationCoordinate2D?
+    @Published var homeAreaRadius: Double?
     
     @Published var isLocatingRunning: Bool = true
     
@@ -70,11 +72,16 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         if(lat == 0 || lon == 0 || rad == 0){
             // 未設定なので記録
+            homeAreaLocation = nil
+            homeAreaRadius = nil
+            
             isLastSeenLocationInHomeArea = false
         } else {
             // 設定済
-            let home = CLLocation(latitude: lat ?? 0, longitude: lon ?? 0)
-            if(location.distance(from: home) < rad ?? 0){
+            homeAreaLocation = CLLocationCoordinate2D(latitude: lat ?? 0, longitude: lon ?? 0)
+            homeAreaRadius = rad ?? 0
+            
+            if(location.distance(from: CLLocation(latitude: lat ?? 0, longitude: lon ?? 0)) < homeAreaRadius ?? 0){
                 // Home area内なのでスキップ
                 isLastSeenLocationInHomeArea = true
             } else {
@@ -83,10 +90,10 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
         
-        print(
-            String(location.coordinate.latitude), String(location.coordinate.longitude),
-            isLastSeenLocationInHomeArea ? "🏠" : "📍", String(lat ?? 0), String(lon ?? 0), String(rad ?? 0)
-        )
+        // print(
+        //     String(location.coordinate.latitude), String(location.coordinate.longitude),
+        //     isLastSeenLocationInHomeArea ? "🏠" : "📍", String(lat ?? 0), String(lon ?? 0), String(rad ?? 0)
+        // )
         
         if(isLastSeenLocationInHomeArea){
             return
@@ -109,11 +116,18 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
                 timestamp: location.timestamp,
                 address: label ?? ""
             )
+            
+            let itemCount = await ItemService.shared.getAllItems().count
+            NotificationManager.instance.sendNotification(
+                count: itemCount,
+                message:
+                (isLastSeenLocationInHomeArea ? "🏠" : "📍") + String(format: "%.6f", createdItem.latitude) + "," + String(format: "%.6f", createdItem.longitude)
+            )
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("\(error)")
+        // print("\(error)")
     }
     
     func startUpdate() {

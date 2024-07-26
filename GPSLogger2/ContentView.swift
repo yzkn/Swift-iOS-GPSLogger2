@@ -9,6 +9,7 @@ import SwiftData
 import SwiftUI
 import CoreLocation
 import MapKit
+import UserNotifications
 
 struct ContentView: View {
     @State private var isShowConfirmDelete = false
@@ -21,24 +22,32 @@ struct ContentView: View {
     @State private var triggerRemove: Bool?
     
     @State private var globeBlue = true
-    @State private var searchTerm: String = ""
+    // @State private var searchTerm: String = ""
     
     @StateObject var locationViewModel = LocationViewModel()
     
     @Environment(\.openURL) var openURL
     
     @Query(sort: \Item.timestamp, order: .reverse) private var items: [Item]
-    private var filteredItems: [Item] {
-        guard !searchTerm.isEmpty else { return items }
-        return items.filter { $0.address.contains(searchTerm) || String($0.latitude).contains(searchTerm) || String($0.longitude).contains(searchTerm)}
-    }
+    // private var filteredItems: [Item] {
+    //     guard !searchTerm.isEmpty else { return items }
+    //     return items.filter { $0.address.contains(searchTerm) || String($0.latitude).contains(searchTerm) || String($0.longitude).contains(searchTerm)}
+    // }
     
-    private var coordinate: CLLocationCoordinate2D? {
+    private var lastSeenCoordinate: CLLocationCoordinate2D? {
         locationViewModel.lastSeenLocation?.coordinate
     }
     
     private var isLastSeenLocationInHomeArea: Bool {
         locationViewModel.isLastSeenLocationInHomeArea
+    }
+    
+    private var homeAreaLocation: CLLocationCoordinate2D? {
+        locationViewModel.homeAreaLocation
+    }
+    
+    private var homeAreaRadius: Double? {
+        locationViewModel.homeAreaRadius
     }
     
     private var dateFormatter = DateFormatter()
@@ -63,7 +72,13 @@ struct ContentView: View {
                                     {
                                         UserAnnotation()
                                         
-                                        ForEach(filteredItems, id: \.self) { item in
+                                        if(homeAreaRadius != nil){
+                                            MapCircle(center: homeAreaLocation!, radius: homeAreaRadius!)
+                                                .foregroundStyle(.mint.opacity(0.4))
+                                        }
+                                        
+                                        // ForEach(filteredItems, id: \.self) { item in
+                                        ForEach(items, id: \.self) { item in
                                             Marker(coordinate: CLLocationCoordinate2D(latitude: item.latitude, longitude: item.longitude)) {
                                                 Text(item.address)
                                                 Image(systemName: "mappin")
@@ -84,7 +99,8 @@ struct ContentView: View {
 
                             ZStack {
                                 HStack{
-                                    List(filteredItems) { item in
+                                    // List(filteredItems) { item in
+                                    List(items) { item in
                                         VStack(alignment: .leading) {
                                             Text(item.address)
                                             HStack{
@@ -108,11 +124,29 @@ struct ContentView: View {
             }
             
             .toolbar {                
+                // ToolbarItem(placement: .cancellationAction) {
+                //     TextField("検索", text: $searchTerm)
+                //         .frame(width: 60.0)
+                //         .padding()
+                //         .cornerRadius(5)
+                // }
+                
                 ToolbarItem(placement: .cancellationAction) {
-                    TextField("検索", text: $searchTerm)
-                        .frame(width: 60.0)
-                        .padding()
-                        .cornerRadius(5)
+                    Button(action: {
+                        if(items.count > 0){
+                            let firstItem = items.first!
+                            let addr = firstItem.address
+                            let latlon = String(firstItem.latitude) + "," + String(firstItem.longitude)
+
+                            let message = "\(addr) https://www.google.com/maps/search/?api=1&query=\(latlon)"
+                            let encoded = message
+                            openURL(URL(string: "https://twitter.com/intent/tweet?text=\(encoded)")!)
+                        } else {
+                            openURL(URL(string: "https://twitter.com/intent/tweet?text=")!)
+                        }
+                    }) {
+                        Image(systemName: "x.square")
+                    }
                 }
                 
                 ToolbarItem(placement: .confirmationAction) {
@@ -200,19 +234,14 @@ struct ContentView: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button(action: {
-                        if(items.count > 0){
-                            let firstItem = items.first!
-                            let addr = firstItem.address
-                            let latlon = String(firstItem.latitude) + "," + String(firstItem.longitude)
-
-                            let message = "\(addr) https://www.google.com/maps/search/?api=1&query=\(latlon)"
-                            let encoded = message
-                            openURL(URL(string: "https://twitter.com/intent/tweet?text=\(encoded)")!)
-                        } else {
-                            openURL(URL(string: "https://twitter.com/intent/tweet?text=")!)
-                        }
+                        isShowConfirmDelete.toggle()
                     }) {
-                        Image(systemName: "x.square")
+                        if(items.count > 0){
+                            Image(systemName: "trash")
+                        } else {
+                            Image(systemName: "trash")
+                                .foregroundStyle(.gray)
+                        }
                     }
                 }
                 
@@ -235,9 +264,12 @@ struct ContentView: View {
                             locationViewModel.stopUpdate()
                         } else {
                             globeBlue = true
+                            locationViewModel.lastSeenLocation = nil
+                            locationViewModel.homeAreaLocation = nil
+                            locationViewModel.homeAreaRadius = nil
+                            
                             locationViewModel.startUpdate()
                             
-                            locationViewModel.lastSeenLocation = nil
                             locationViewModel.forceUpdate()
                         }
                     }) {
@@ -271,14 +303,14 @@ struct ContentView: View {
                     case .denied:
                         ErrorView(errorText: "位置情報を使用できません。")
                     case .authorizedAlways, .authorizedWhenInUse:
-                        if(coordinate == nil){
+                        if(lastSeenCoordinate == nil){
                             Text("---")
                         } else {
                             Text(
                                 (isLastSeenLocationInHomeArea ? "🏠" : "📍") +
-                                String(format: "%.8f", coordinate?.latitude ?? 0) +
+                                String(format: "%.8f", lastSeenCoordinate?.latitude ?? 0) +
                                 "," +
-                                String(format: "%.8f", coordinate?.longitude ?? 0)
+                                String(format: "%.8f", lastSeenCoordinate?.longitude ?? 0)
                             ).font(.footnote)
                         }
                     default:
@@ -288,9 +320,16 @@ struct ContentView: View {
                     Spacer()
                     
                     Button(action: {
-                        isShowConfirmDelete.toggle()
+                        globeBlue = false
+                        locationViewModel.stopUpdate()
                     }) {
-                        Image(systemName: "trash")
+                        if globeBlue {
+                            Image(systemName: "stop.circle")
+                                .foregroundStyle(.red)
+                        } else {
+                            Image(systemName: "stop.circle")
+                                .foregroundStyle(.gray)
+                        }
                     }
                 }
             }
@@ -309,7 +348,13 @@ struct ContentView: View {
             .task(id: triggerRemove) {
                 guard triggerRemove != nil else { return }
                 let result = await ItemService.shared.deleteAllItems()
+                
                 locationViewModel.lastSeenLocation = nil
+                locationViewModel.homeAreaLocation = nil
+                locationViewModel.homeAreaRadius = nil
+
+                UIApplication.shared.applicationIconBadgeNumber = 0
+
                 if(result){
                     isShowAlertAllItemDeleted.toggle()
                 }
