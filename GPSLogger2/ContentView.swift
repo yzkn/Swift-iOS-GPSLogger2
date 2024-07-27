@@ -72,18 +72,21 @@ struct ContentView: View {
                                     {
                                         UserAnnotation()
                                         
-                                        if(homeAreaRadius != nil){
+                                        if (homeAreaRadius != nil) {
                                             MapCircle(center: homeAreaLocation!, radius: homeAreaRadius!)
                                                 .foregroundStyle(.mint.opacity(0.4))
                                         }
                                         
-                                        // ForEach(filteredItems, id: \.self) { item in
-                                        ForEach(items, id: \.self) { item in
-                                            Marker(coordinate: CLLocationCoordinate2D(latitude: item.latitude, longitude: item.longitude)) {
-                                                Text(item.address)
-                                                Image(systemName: "mappin")
+                                        if (items.count > 0) {
+                                            if let firstItem = items.first {
+                                                let fi:Item = firstItem
+                                                
+                                                Marker(coordinate: CLLocationCoordinate2D(latitude: fi.latitude, longitude: fi.longitude)) {
+                                                    Text(fi.address)
+                                                    Image(systemName: "mappin")
+                                                }
+                                                .tint(.blue)
                                             }
-                                            .tint(.blue)
                                         }
                                     }
                                     .mapControls {
@@ -307,10 +310,11 @@ struct ContentView: View {
                             Text("---")
                         } else {
                             Text(
+                                String(format: "%d", items.count) + " " +
                                 (isLastSeenLocationInHomeArea ? "🏠" : "📍") +
-                                String(format: "%.8f", lastSeenCoordinate?.latitude ?? 0) +
+                                String(format: "%.6f", lastSeenCoordinate?.latitude ?? 0) +
                                 "," +
-                                String(format: "%.8f", lastSeenCoordinate?.longitude ?? 0)
+                                String(format: "%.6f", lastSeenCoordinate?.longitude ?? 0)
                             ).font(.footnote)
                         }
                     default:
@@ -353,7 +357,11 @@ struct ContentView: View {
                 locationViewModel.homeAreaLocation = nil
                 locationViewModel.homeAreaRadius = nil
 
-                UIApplication.shared.applicationIconBadgeNumber = 0
+                do {
+                    try await UNUserNotificationCenter.current().setBadgeCount(0)
+                } catch {
+                    // print("setBadgeCount(0)")
+                }
 
                 if(result){
                     isShowAlertAllItemDeleted.toggle()
