@@ -21,4 +21,12 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
             completionHandler([[.banner, .sound, .badge]])
     }
+    
+    func applicationWillResignActive(_ application: UIApplication) {
+        LongTaskManager.shared.start()
+    }
+
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        LongTaskManager.shared.end()
+    }
 }

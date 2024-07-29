@@ -19,16 +19,20 @@ class NotificationManager {
     }
     
     func sendNotification(count:Int, message:String) {
-        let content = UNMutableNotificationContent()
-        content.badge = NSNumber.init(value: count)
-        content.title = "GPSLogger2"
-        content.subtitle = "Location updated."
-        content.sound = UNNotificationSound.default
-        content.body = message
-
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-        let request = UNNotificationRequest(identifier: "GPSLogger2", content: content, trigger: trigger)
-
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        UNUserNotificationCenter.current().getNotificationSettings(completionHandler: {setting in
+            if setting.authorizationStatus == .authorized {
+                let content = UNMutableNotificationContent()
+                content.badge = NSNumber.init(value: count)
+                content.title = "GPSLogger2"
+                content.subtitle = "Location updated."
+                content.sound = UNNotificationSound.default
+                content.body = message
+                
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+                let request = UNNotificationRequest(identifier: "GPSLogger2", content: content, trigger: trigger)
+                
+                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            }
+        })
     }
 }

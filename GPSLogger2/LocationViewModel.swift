@@ -32,6 +32,7 @@ class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         locationManager.distanceFilter = 1
         locationManager.allowsBackgroundLocationUpdates = true // バックグラウンド実行
         locationManager.pausesLocationUpdatesAutomatically = false
+        locationManager.showsBackgroundLocationIndicator = true
         locationManager.startUpdatingLocation()
     }
 
