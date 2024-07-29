@@ -77,17 +77,17 @@ struct ContentView: View {
                                                 .foregroundStyle(.mint.opacity(0.4))
                                         }
                                         
-                                        if (items.count > 0) {
-                                            if let firstItem = items.first {
-                                                let fi:Item = firstItem
-                                                
-                                                Marker(coordinate: CLLocationCoordinate2D(latitude: fi.latitude, longitude: fi.longitude)) {
-                                                    Text(fi.address)
-                                                    Image(systemName: "mappin")
-                                                }
-                                                .tint(.blue)
-                                            }
-                                        }
+                                         if (items.count > 0) {
+                                             if let firstItem = items.first {
+                                                 let fi:Item = firstItem
+                                        
+                                                 Marker(coordinate: CLLocationCoordinate2D(latitude: fi.latitude, longitude: fi.longitude)) {
+                                                     Text(fi.address)
+                                                     Image(systemName: "mappin")
+                                                 }
+                                                 .tint(.blue)
+                                             }
+                                         }
                                     }
                                     .mapControls {
                                         MapCompass()
@@ -190,6 +190,7 @@ struct ContentView: View {
                                 strm.close()
                             }
                             isShowAlertAllItemExported.toggle()
+                            SpeechManager.shared.speech("CSVファイルを保存しました。")
                         }
                     }
                 }
@@ -231,6 +232,7 @@ struct ContentView: View {
                                 strm.close()
                             }
                             isShowAlertAllItemExported.toggle()
+                            SpeechManager.shared.speech("KMLファイルを保存しました。")
                         }
                     }
                 }

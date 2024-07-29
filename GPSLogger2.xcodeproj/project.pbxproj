@@ -16,6 +16,7 @@
 		9A8498902C5380D40044B77E /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A84988F2C5380D40044B77E /* NotificationManager.swift */; };
 		9A8498922C5382EA0044B77E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8498912C5382EA0044B77E /* AppDelegate.swift */; };
 		9AB6E71F2C578A5F00D36F2E /* LongTaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB6E71E2C578A5F00D36F2E /* LongTaskManager.swift */; };
+		9AB6E7212C57AA5200D36F2E /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB6E7202C57AA5200D36F2E /* SpeechManager.swift */; };
 		9ADCFD242C35EAFA002585E5 /* GPSLogger2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCFD232C35EAFA002585E5 /* GPSLogger2App.swift */; };
 		9ADCFD262C35EAFA002585E5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCFD252C35EAFA002585E5 /* ContentView.swift */; };
 		9ADCFD282C35EAFD002585E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9ADCFD272C35EAFD002585E5 /* Assets.xcassets */; };
@@ -34,6 +35,7 @@
 		9A84988F2C5380D40044B77E /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		9A8498912C5382EA0044B77E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9AB6E71E2C578A5F00D36F2E /* LongTaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongTaskManager.swift; sourceTree = "<group>"; };
+		9AB6E7202C57AA5200D36F2E /* SpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
 		9ADCFD202C35EAFA002585E5 /* GPSLogger2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPSLogger2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ADCFD232C35EAFA002585E5 /* GPSLogger2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPSLogger2App.swift; sourceTree = "<group>"; };
 		9ADCFD252C35EAFA002585E5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 				9A84988F2C5380D40044B77E /* NotificationManager.swift */,
 				9A8498912C5382EA0044B77E /* AppDelegate.swift */,
 				9AB6E71E2C578A5F00D36F2E /* LongTaskManager.swift */,
+				9AB6E7202C57AA5200D36F2E /* SpeechManager.swift */,
 			);
 			path = GPSLogger2;
 			sourceTree = "<group>";
@@ -183,6 +186,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9ADCFD262C35EAFA002585E5 /* ContentView.swift in Sources */,
+				9AB6E7212C57AA5200D36F2E /* SpeechManager.swift in Sources */,
 				9ADCFD322C35ECA2002585E5 /* Item.swift in Sources */,
 				9A59BC9D2C3BF1E400439023 /* ReverseGeocoding.swift in Sources */,
 				9AB6E71F2C578A5F00D36F2E /* LongTaskManager.swift in Sources */,
